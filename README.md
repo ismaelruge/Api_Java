@@ -128,7 +128,7 @@ public class ConfiguracionUsuarios {
 ## Instalación y Ejecución
 1. Clonar el repositorio.
    ```bash
-   git clone https://github.com/tu-repo/Api_Java.git
+   git clone https://github.com/ismaelruge/Api_Java.git
    ```
 2. Navegar al directorio del proyecto.
    ```bash
@@ -148,10 +148,6 @@ public class ConfiguracionUsuarios {
 ## Credenciales de Prueba
 - **Usuario:** `usuario`
 - **Contraseña:** `contraseña`
-
-## Notas
-- Se recomienda modificar las credenciales antes de desplegar en producción.
-- CSRF está deshabilitado solo para pruebas. En producción, debe habilitarse correctamente.
 
 ## Autor
 Ismael Ruge Gonzalez
