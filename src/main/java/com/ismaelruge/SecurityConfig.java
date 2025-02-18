@@ -15,7 +15,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/publico/**").permitAll() // Permitir acceso a login y recursos estáticos
                         .requestMatchers("/privado/**").authenticated() // Proteger rutas privadas
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // Permitir todo para interactuar con el saludo
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)) // Manejo de sesiones
                 .formLogin(form -> form

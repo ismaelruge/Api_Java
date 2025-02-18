@@ -72,7 +72,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/publico/**").permitAll() // Permitir acceso público
                         .requestMatchers("/privado/**").authenticated() // Proteger rutas privadas
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // Permitimos el acceso libre de las demás rutas
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .formLogin(form -> form
@@ -125,7 +125,66 @@ public class ConfiguracionUsuarios {
 }
 ```
 
+### 5. Internacionalización
+El sistema soporta múltiples idiomas mediante `MessageSource`.
+
+#### Archivos de Mensajes
+Archivo `messages.properties`:
+```
+welcome.message=Hello! Welcome to our internationalized application.
+```
+Archivo `messages_es.properties`:
+```
+welcome.message=¡Hola! Bienvenido a nuestra aplicación internacionalizada.
+```
+
+#### Configuración de Internacionalización
+```java
+package com.ismaelruge;
+
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
+
+@Configuration
+public class ConfiguracionInternacionalizacion {
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
+    }
+}
+```
+
+#### Controlador de Internacionalización
+```java
+package com.ismaelruge;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Locale;
+
+@RestController
+public class InternacionalizacionController {
+    @Autowired
+    private MessageSource messageSource;
+
+    @GetMapping("/saludo")
+    public String obtenerSaludo(@RequestHeader(name = "Accept-Language", required = false) String language) {
+        Locale locale = (language != null) ? Locale.forLanguageTag(language) : LocaleContextHolder.getLocale();
+        return messageSource.getMessage("welcome.message", null, locale);
+    }
+}
+```
+
 ## Instalación y Ejecución
+
 1. Clonar el repositorio.
    ```bash
    git clone https://github.com/ismaelruge/Api_Java.git
@@ -144,6 +203,7 @@ public class ConfiguracionUsuarios {
 |---------|-----------|--------|
 | GET     | /publico  | Libre  |
 | GET     | /privado  | Requiere autenticación |
+| GET     | /saludo   | Soporta internacionalización |
 
 ## Credenciales de Prueba
 - **Usuario:** `usuario`
